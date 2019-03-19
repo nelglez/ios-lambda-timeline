@@ -15,14 +15,26 @@ class ImagePostViewController: ShiftableViewController {
     @IBOutlet weak var hueSlider: UISlider!
     
     
-    let zoomBlur = CIFilter(name: "CIZoomBlur")!
+    let blur = CIFilter(name: "CIDiscBlur")!
     let hueAdjust = CIFilter(name: "CIHueAdjust")!
     
     let context = CIContext(options: nil)
     
+    var outputImage: UIImage?
+    
     var originalImage: UIImage? {
         didSet {
-            updateImageView()
+            
+            guard let originalImage = originalImage else { return }
+ 
+                let originalSizeOfImage = imageView.bounds.size
+                
+                let deviceScreenScale = UIScreen.main.scale
+            
+                let scaledSize = CGSize(width: originalSizeOfImage.width * deviceScreenScale, height: originalSizeOfImage.height * deviceScreenScale)
+                
+                scaledImage = originalImage.imageByScaling(toSize: scaledSize)
+           
         }
     }
     
@@ -33,18 +45,39 @@ class ImagePostViewController: ShiftableViewController {
         setImageViewHeight(with: 1.0)
         
         updateViews()
+        
     }
     
     func updateImageView() {
-        
-        if let zoomedImage = originalImage {
-            imageView.image = zoomBlur(to: zoomedImage)
-            imageView.image = hueAdjust(with: zoomedImage)
-            
-        }
-        
+      
+            if let scaledImage = scaledImage {
+
+               imageView.image = image(byFiltering: scaledImage)
+                
+            }
+ 
     }
     
+//    func updateWithBlur() {
+//      //  guard let outputImage = outputImage else {
+//        if let scaledImage = scaledImage {
+//
+//            imageView.image = image(withABlurEffect: scaledImage)
+//     //   }
+//       //     return
+//        }
+//      //  imageView.image = image(withABlurEffect: outputImage)
+//
+//    }
+    
+    var scaledImage: UIImage? {
+        didSet {
+            updateImageView()
+           // updateWithBlur()
+        }
+    }
+    
+
     
     func updateViews() {
         
@@ -64,46 +97,86 @@ class ImagePostViewController: ShiftableViewController {
         
     }
     
-   private func zoomBlur(to image: UIImage) -> UIImage {
+//        private func image(withABlurEffect image: UIImage) -> UIImage {
+//
+//            guard let cgImage = image.cgImage else { return image }
+//
+//            let ciImage = CIImage(cgImage: cgImage)
+//
+//            blur.setValue(ciImage, forKey: "inputImage")
+//            blur.setValue(zoomBlurSlider.value, forKey: "inputRadius")
+//
+//            hueAdjust.setValue(blur.outputImage, forKey: "inputImage")
+//            hueAdjust.setValue(hueSlider.value, forKey: "inputAngle")
+//
+//            guard let outputCIImage = blur.outputImage,
+//                let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return image }
+//
+//            outputImage = UIImage(cgImage: outputCGImage)
+//
+//            return UIImage(cgImage: outputCGImage)
+//        }
     
-    guard let cgImage = image.cgImage else {return image}
     
-    let ciImage = CIImage(cgImage: cgImage)
-    
-    zoomBlur.setValue(ciImage, forKey: "inputImage")
-   // zoomBlur.setValue(CIVector(x: 150, y: 150), forKey: "inputCenter")
-    zoomBlur.setValue(zoomBlurSlider.value, forKey: "inputAmount")
-    
-    guard let outputCIImage = zoomBlur.outputImage else {return image}
-    
-    //take the ciimage and run it through the CIcontext to create a tangible CGImage
-    guard let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else {return image}
-    
-
-    
-    return UIImage(cgImage: outputCGImage)
-    
-    }
-    
-    private func hueAdjust(with image: UIImage) -> UIImage {
+    private func image(byFiltering image: UIImage) -> UIImage {
         
-        guard let cgImage = image.cgImage else {return image}
+        guard let cgImage = image.cgImage else { return image }
         
         let ciImage = CIImage(cgImage: cgImage)
+
+        blur.setValue(ciImage, forKey: "inputImage")
+        blur.setValue(zoomBlurSlider.value, forKey: "inputRadius")
+        guard let blurOutputCIImage = blur.outputImage else { return image }
         
-        hueAdjust.setValue(ciImage, forKey: "inputImage")
+        hueAdjust.setValue(blurOutputCIImage, forKey: "inputImage")
         hueAdjust.setValue(hueSlider.value, forKey: "inputAngle")
+        guard let outputCIImage = hueAdjust.outputImage else { return image }
         
-        guard let outputCIImage = hueAdjust.outputImage else {return image}
-        
-        //take the ciimage and run it through the CIcontext to create a tangible CGImage
-        guard let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else {return image}
-        
-        
+        guard let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return image }
         
         return UIImage(cgImage: outputCGImage)
-        
     }
+
+    
+    
+//    private func image(withABlurEffect image: UIImage) -> UIImage {
+//
+//        guard let cgImage = image.cgImage else { return image }
+//
+//        let ciImage = CIImage(cgImage: cgImage)
+//
+//        blur.setValue(ciImage, forKey: "inputImage")
+//        blur.setValue(zoomBlurSlider.value, forKey: "inputRadius")
+//
+//
+//        guard let outputCIImage = blur.outputImage,
+//            let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else { return image }
+//
+//        outputImage = UIImage(cgImage: outputCGImage)
+//
+//        return UIImage(cgImage: outputCGImage)
+//    }
+//
+//
+//    private func hueAdjust(with image: UIImage) -> UIImage {
+//
+//        guard let cgImage = image.cgImage else {return image}
+//
+//        let ciImage = CIImage(cgImage: cgImage)
+//
+//        hueAdjust.setValue(ciImage, forKey: "inputImage")
+//        hueAdjust.setValue(hueSlider.value, forKey: "inputAngle")
+//
+//        guard let outputCIImage = hueAdjust.outputImage else {return image}
+//
+//        //take the ciimage and run it through the CIcontext to create a tangible CGImage
+//        guard let outputCGImage = context.createCGImage(outputCIImage, from: outputCIImage.extent) else {return image}
+//
+//        outputImage = UIImage(cgImage: outputCGImage)
+//
+//        return UIImage(cgImage: outputCGImage)
+//
+//    }
     
     @IBAction func hueSlider(_ sender: UISlider) {
         updateImageView()
@@ -188,7 +261,9 @@ class ImagePostViewController: ShiftableViewController {
     
     @IBAction func zoomBlurSliderPressed(_ sender: UISlider) {
         
+  //  updateWithBlur()
         updateImageView()
+    
     }
     
     

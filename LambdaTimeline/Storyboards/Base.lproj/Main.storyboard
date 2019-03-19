@@ -164,7 +164,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="-200" maxValue="200" translatesAutoresizingMaskIntoConstraints="NO" id="S0E-Qz-JKu">
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" minValue="0.0" maxValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="S0E-Qz-JKu">
                                                 <rect key="frame" x="38.5" y="0.0" width="318.5" height="31"/>
                                                 <connections>
                                                     <action selector="zoomBlurSliderPressed:" destination="1Aw-4e-BW2" eventType="valueChanged" id="BUx-bX-7BQ"/>
