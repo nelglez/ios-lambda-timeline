@@ -52,8 +52,13 @@ class ImagePostDetailTableViewController: UITableViewController {
             }
         }
         
+        let addVoiceComment = UIAlertAction(title: "Voice Comment", style: .default) { (_) in
+            self.performSegue(withIdentifier: "toAudioVC", sender: self)
+        }
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
+        alert.addAction(addVoiceComment)
         alert.addAction(addCommentAction)
         alert.addAction(cancelAction)
         
