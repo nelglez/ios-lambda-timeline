@@ -133,8 +133,37 @@ class VideoPostViewController: UIViewController, AVCaptureFileOutputRecordingDel
     
     @IBAction func uploadVideoBarButtonPressed(_ sender: UIBarButtonItem) {
         
+        let alert = UIAlertController(title: "Add Video Post", message: nil, preferredStyle: .alert)
         
+        alert.addTextField { (textField) in
+            textField.placeholder = "Title"
+        }
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+        alert.addAction(UIAlertAction(title: "Post Now", style: .default) { (_) in
+            guard let title = alert.textFields?[0].text, title.count > 0 else {
+                self.presentInformationalAlertController(title: "Uh-oh", message: "Make sure that you add a photo and a caption before posting.")
+                return
+            }
+            
+             guard let url = self.lastRecordedURL, let data = try? Data(contentsOf: url) else { return }
+        
+            self.postController?.createPost(with: title, ofType: .video, mediaData: data, ratio: 9.0/16.0) { (success) in
+                guard success else {
+                    DispatchQueue.main.async {
+                        self.presentInformationalAlertController(title: "Error", message: "Unable to create post. Try again.")
+                    }
+                    return
+                }
+                
+                DispatchQueue.main.async {
+                    self.navigationController?.popViewController(animated: true)
+                }
+            }
+        })
+        
+        present(alert, animated: true, completion: nil)
+    
     }
-    
-    
 }
