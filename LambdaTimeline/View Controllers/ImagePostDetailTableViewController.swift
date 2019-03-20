@@ -66,6 +66,8 @@ class ImagePostDetailTableViewController: UITableViewController {
             self.performSegue(withIdentifier: "toAudioVC", sender: self)
         }
         
+        
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         
         alert.addAction(addVoiceComment)

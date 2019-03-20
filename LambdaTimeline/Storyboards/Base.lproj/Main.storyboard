@@ -100,6 +100,7 @@
                     <connections>
                         <segue destination="1Aw-4e-BW2" kind="show" identifier="AddImagePost" id="jaI-fq-Woc"/>
                         <segue destination="OyM-8q-Icp" kind="show" identifier="ViewImagePost" id="hhs-es-AdQ"/>
+                        <segue destination="wKP-kl-45z" kind="show" identifier="toVideoPost" id="3OX-oj-Lyo"/>
                     </connections>
                 </collectionViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="WRz-lg-pQU" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -237,6 +238,62 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XXa-A2-VJT" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1969" y="-195"/>
+        </scene>
+        <!--Title-->
+        <scene sceneID="x7f-Rd-M5n">
+            <objects>
+                <viewController id="wKP-kl-45z" customClass="VideoPostViewController" customModule="LambdaTimeline" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="ssH-aa-28G">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Vbp-9S-fpe" customClass="CameraPreviewView" customModule="LambdaTimeline" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1kw-g0-ldX">
+                                        <rect key="frame" x="167.5" y="555" width="40" height="40"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="40" id="JPZ-6U-5ap"/>
+                                            <constraint firstAttribute="width" constant="40" id="slV-SC-W0M"/>
+                                        </constraints>
+                                        <color key="tintColor" red="0.91371303800000003" green="0.33930072189999999" blue="0.24700140949999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                                        <state key="normal" image="Record"/>
+                                        <connections>
+                                            <action selector="recordButtonPressed:" destination="wKP-kl-45z" eventType="touchUpInside" id="ZgX-cZ-Ne8"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="1kw-g0-ldX" secondAttribute="bottom" constant="8" id="1Pm-GX-aim"/>
+                                    <constraint firstItem="1kw-g0-ldX" firstAttribute="centerX" secondItem="Vbp-9S-fpe" secondAttribute="centerX" id="RjG-tK-fhp"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="Vbp-9S-fpe" firstAttribute="bottom" secondItem="ki1-5p-gFn" secondAttribute="bottom" id="AuX-vS-nGw"/>
+                            <constraint firstItem="Vbp-9S-fpe" firstAttribute="top" secondItem="ki1-5p-gFn" secondAttribute="top" id="Ru2-8C-dxp"/>
+                            <constraint firstItem="Vbp-9S-fpe" firstAttribute="leading" secondItem="ki1-5p-gFn" secondAttribute="leading" id="eeb-Pd-1Fe"/>
+                            <constraint firstItem="Vbp-9S-fpe" firstAttribute="trailing" secondItem="ki1-5p-gFn" secondAttribute="trailing" id="oSG-UV-Ucy"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="ki1-5p-gFn"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Title" id="HCo-nZ-d8V">
+                        <barButtonItem key="rightBarButtonItem" title="Upload Video" id="MED-WH-YzZ">
+                            <connections>
+                                <action selector="uploadVideoBarButtonPressed:" destination="wKP-kl-45z" id="n49-YT-4J7"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="cameraPreviewView" destination="Vbp-9S-fpe" id="rOr-WY-gBd"/>
+                        <outlet property="recordButton" destination="1kw-g0-ldX" id="Ah9-j3-jBr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ja0-Yw-f8b" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2688.8000000000002" y="-241.52923538230885"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="gdW-Je-ais">
@@ -527,4 +584,7 @@
             <point key="canvasLocation" x="2626" y="471"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="Record" width="116" height="116"/>
+    </resources>
 </document>
