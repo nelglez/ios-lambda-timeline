@@ -117,6 +117,29 @@ class PostController {
         uploadTask.resume()
     }
     
+    func addAudioComment(with url: URL, to post: Post) {
+        
+        let post = post
+        
+        guard let currentUser = Auth.auth().currentUser,
+            let author = Author(user: currentUser) else { return }
+        
+        do {
+            let audioData = try Data(contentsOf: url)
+            store(mediaData: audioData, mediaType: .audio) { (mediaURL) in
+                guard let mediaURL = mediaURL else { return }
+                
+                let comment = Comment(audioURL: mediaURL, author: author)
+                post.comments.append(comment)
+                
+                self.savePostToFirebase(post)
+            }
+        } catch {
+            NSLog("No audio data: \(error)")
+        }
+
+    }
+    
     var posts: [Post] = []
     let currentUser = Auth.auth().currentUser
     let postsRef = Database.database().reference().child("posts")
